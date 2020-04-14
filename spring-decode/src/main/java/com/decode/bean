@@ -1,0 +1,41 @@
+BeanFactory与ApplicationContext作用和区别？
+    作用：
+    区别：
+
+AnnotationConfigApplicationContext的作用？
+    加载配置类，通过注解的方式启动程序。
+    如果使用xml配置，则是通过ClassPathXmlApplicationContext来启动，二者都是继承自ApplicationContext
+
+SpringBean的生命周期？
+    1、AnnotationConfigApplicationContext中的构造方法，进入到刷新的方法：refresh()；
+    2、finishBeanFactoryInitialization();初始化所有单例对象
+    3、beanFactory.preInstantiateSingletons();初始化所有单例对象（非懒加载）
+    4、getBean(beanName) →  调用doGetBean()    先查询该对象是否被初始化过，没有的话，就创建注册到IOC容器中
+    5、createBean()          创建对象，判断对象如果是为单例的情况下调用该方法
+    6、doCreateBean()        创建IOC对象
+    7、createBeanInstance()  使用java的反射机制实例化我们的对象
+    7、populateBean()        给set方法属性赋值
+    8、invokeAwareMethods()  判断bean的类型是否Aware相关依赖，如果存在调用回调
+    9、initializeBean()      执行初始化方法（也可以自定义初始化方法）
+    10、applyBeanPostProcessorsBeforeInitialization()    初始化方法之前处理（增强）
+    11、invokeInitMethods()  调用自定义init方法（利用java的反射机制）
+    12、applyBeanPostProcessorsAfterInitialization()     初始化方法之后处理（增强）
+    13、使用该bean对象
+    14、销毁bean
+
+如果知道bean对象到底是如何创建的？
+    答：反射机制
+
+SPI扩展机制：
+
+Spring循环依赖（属性注入）：单例下是默认支持循环依赖
+    如何证明上述问题：spring源码中，在实例化我们的对象之后，会有一个判断（判断是否为单例，总是true，对象是否正在创建，总是true，
+    决定是否支持循环依赖而是根据一个属性，allowCircularReferences（存在AbstractAutowireCapableBeanFactory类中），默认为true
+    ，如果不想支持循环依赖，可以进行关闭）
+
+    如何关闭：在spring容器初始化之前，进行修改allowCircularReferences的值（通过AnnotationConfigApplicationContext获取getBeanFactory，然后进行修改）
+    循环依赖细节
+
+@Autowired和@Resource的区别
+    - Resource是通过CommonAnnotationBeanPostProcessor后置处理器来进行注入的
+    - Autowired是通过AutowiredAnnotationBeanPostProcessor后置处理器来进行注入的

@@ -1,0 +1,13 @@
+group 'org.springframework'
+version '5.0.16.BUILD-SNAPSHOT'
+
+apply plugin: 'war'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':spring-context')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
